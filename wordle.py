@@ -23,10 +23,7 @@ def guess(playerGuess: str, guessWord, individualWords, livesRemaining, validWor
         if playerGuess not in validWords:
             playerGuess = input("Word not in word list. Please submit another word: ").lower()
 
-    letterIndex = 0
-    for x in playerGuess:
-        letterIndex += 1
-        individualWords.append(colors(x, guessWord, letterIndex, playerGuess=playerGuess))
+    individualWords.append(colors(guessWord, playerGuess))
 
     display(individualWords, guessedWords)
 
@@ -41,27 +38,32 @@ def guess(playerGuess: str, guessWord, individualWords, livesRemaining, validWor
 
     guess(input("\nFive letter guess: "), guessWord, individualWords, livesRemaining - 1, validWords=validWords)
 
-def colors(letter, guessWord, letterIndex, playerGuess=''):
-    # I have to implement a stupid stupid stupid counter for the letters
+def colors(guessWord, playerguess):
+    # I have to implement a stupid stupid stupid counter for the letters: Tried didn't work
     # Word:  glows
     # Guess: masse
     # Problem: each s will be yellow even though only one of them should be
-    wordguesses = []
-    lettersInWord = countLetters(guessWord)
-    lettersInGuess = countLetters(playerGuess)
-    print(lettersInGuess)
-    if letter is guessWord[letterIndex - 1] and lettersInGuess[letter] > lettersInWord[letter]:
-        tempVar = f'{Fore.GREEN}{letter}{Style.RESET_ALL}'
-        wordguesses.append(tempVar)
-        lettersInGuess[letter] -= 1
-    elif letter in guessWord and lettersInGuess[letter] > 0:
-        tempVar = f'{Fore.LIGHTYELLOW_EX}{letter}{Style.RESET_ALL}'
-        wordguesses.append(tempVar)
-        lettersInGuess[letter] -= 1
-    else:
-        tempVar = f'{Fore.LIGHTBLACK_EX}{letter}{Style.RESET_ALL}'
-        wordguesses.append(tempVar)
-    return strArrayToText(wordguesses)
+    wordguesses = [['', False], ['', False], ['', False], ['', False], ['', False]]
+
+    for x in enumerate(guessWord):
+        if playerguess[x[0]] is x[1]:
+            wordguesses[x[0]][0] = f'{Fore.GREEN}{playerguess[x[0]]}{Style.RESET_ALL}'
+            wordguesses[x[0]][1] = True
+
+    for x in enumerate(guessWord):
+        good = wordguesses[x[0]][1]
+        print(good)
+        if playerguess[x[0]] in guessWord and not good:
+            print("reached")
+            wordguesses[x[0]][0] = f'{Fore.LIGHTYELLOW_EX}{playerguess[x[0]]}{Style.RESET_ALL}'
+        else:
+            wordguesses[x[0]][0] = f'{Fore.LIGHTBLACK_EX}{playerguess[x[0]]}{Style.RESET_ALL}'
+
+    convertMe = []
+    for x in enumerate(wordguesses):
+        convertMe.append(x[1][0])
+
+    return strArrayToText(convertMe)
 
 def strArrayToText(array: list) -> str:
     """Converts the array of strings into one single string"""
