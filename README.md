@@ -4,7 +4,7 @@ Wordle in python
 ## Installing
 To install any python packages that are needed, run `install.bat`. It will install the random2 package and the colorama package
 
-Alternatively, you can run these commands in your terminal to get the necessary libraries:
+Alternatively, you can run these commands in your terminal to get the necessary packages:
 
 `pip install colorama`
 
