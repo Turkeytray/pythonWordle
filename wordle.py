@@ -45,18 +45,37 @@ def colors(guessWord, playerguess):
     # Problem: each s will be yellow even though only one of them should be
     wordguesses = [['', False], ['', False], ['', False], ['', False], ['', False]]
 
+    lettersInWord = countLetters(guessWord)
+
     for x in enumerate(guessWord):
-        if playerguess[x[0]] is x[1]:
+        good = wordguesses[x[0]][1]
+        if playerguess[x[0]] is x[1] and lettersInWord[playerguess[x[0]]] > 0 and not good:
             wordguesses[x[0]][0] = f'{Fore.GREEN}{playerguess[x[0]]}{Style.RESET_ALL}'
+            wordguesses[x[0]][1] = True
+            lettersInWord[playerguess[x[0]]] -= 1
             wordguesses[x[0]][1] = True
 
     for x in enumerate(guessWord):
         good = wordguesses[x[0]][1]
-        print(good)
-        if playerguess[x[0]] in guessWord and not good:
-            print("reached")
+        if playerguess[x[0]] is x[1] and lettersInWord[playerguess[x[0]]] > 0 and not good:
+            print(lettersInWord[x[1]] > 0)
+            wordguesses[x[0]][0] = f'{Fore.GREEN}{playerguess[x[0]]}{Style.RESET_ALL}'
+            wordguesses[x[0]][1] = True
+            lettersInWord[playerguess[x[0]]] -= 1
+        elif playerguess[x[0]] in guessWord and not good and lettersInWord[playerguess[x[0]]] > 0:
             wordguesses[x[0]][0] = f'{Fore.LIGHTYELLOW_EX}{playerguess[x[0]]}{Style.RESET_ALL}'
-        else:
+            wordguesses[x[0]][1] = True
+            lettersInWord[playerguess[x[0]]] -= 1
+
+    for x in enumerate(guessWord):
+        good = wordguesses[x[0]][1]
+        if playerguess[x[0]] in guessWord and not good and lettersInWord[playerguess[x[0]]] > 0:
+            wordguesses[x[0]][0] = f'{Fore.LIGHTYELLOW_EX}{playerguess[x[0]]}{Style.RESET_ALL}'
+            wordguesses[x[0]][1] = True
+
+    for x in enumerate(guessWord):
+        good = wordguesses[x[0]][1]
+        if not good:
             wordguesses[x[0]][0] = f'{Fore.LIGHTBLACK_EX}{playerguess[x[0]]}{Style.RESET_ALL}'
 
     convertMe = []
@@ -93,6 +112,13 @@ def countLetters(word: str) -> dict:
         counter[i] += 1
     return counter
 
+def countBooleans(wordguesses):
+    counter = {}
+    for i in wordguesses:
+        if i[1] not in counter.keys():
+            counter.update({i[1]: 0})
+        counter[i[1]] += 1
+    return counter
 
 if __name__ == "__main__":
     individualWords = []
@@ -101,7 +127,5 @@ if __name__ == "__main__":
     validWords = getValidWords('wordleWords.txt')
 
     guessWord = getWord('wordleWords.txt').lower()
-
-    print(guessWord)
 
     guess(input('Five Letter Guess: ').lower(), guessWord, individualWords, 6, validWords=validWords)
