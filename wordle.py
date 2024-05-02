@@ -4,8 +4,6 @@ from colorama import Style
 
 from random import randint
 
-colorama_init()
-
 def getWord(wordList: str) -> str:
     """Opens a list of words then picks a random word and returns that word"""
     with open(wordList, 'r') as file:
@@ -39,44 +37,25 @@ def guess(playerGuess: str, guessWord, individualWords, livesRemaining, validWor
     guess(input("\nFive letter guess: "), guessWord, individualWords, livesRemaining - 1, validWords=validWords)
 
 def colors(guessWord, playerguess):
-    # I have to implement a stupid stupid stupid counter for the letters: Tried didn't work
-    # Word:  glows
-    # Guess: masse
-    # Problem: each s will be yellow even though only one of them should be
     wordguesses = [['', False], ['', False], ['', False], ['', False], ['', False]]
 
     lettersInWord = countLetters(guessWord)
 
-    for x in enumerate(guessWord):
-        good = wordguesses[x[0]][1]
-        if playerguess[x[0]] is x[1] and lettersInWord[playerguess[x[0]]] > 0 and not good:
-            wordguesses[x[0]][0] = f'{Fore.GREEN}{playerguess[x[0]]}{Style.RESET_ALL}'
-            wordguesses[x[0]][1] = True
-            lettersInWord[playerguess[x[0]]] -= 1
-            wordguesses[x[0]][1] = True
+    for x, letter in enumerate(guessWord):
+        good = wordguesses[x][1]
+        if playerguess[x] is letter and lettersInWord[playerguess[x]] > 0 and not good:
+            wordguesses[x][0] = f'{Fore.GREEN}{playerguess[x]}{Style.RESET_ALL}'
+            lettersInWord[playerguess[x]] -= 1
+            wordguesses[x][1] = True
 
-    for x in enumerate(guessWord):
-        good = wordguesses[x[0]][1]
-        if playerguess[x[0]] is x[1] and lettersInWord[playerguess[x[0]]] > 0 and not good:
-            print(lettersInWord[x[1]] > 0)
-            wordguesses[x[0]][0] = f'{Fore.GREEN}{playerguess[x[0]]}{Style.RESET_ALL}'
-            wordguesses[x[0]][1] = True
-            lettersInWord[playerguess[x[0]]] -= 1
-        elif playerguess[x[0]] in guessWord and not good and lettersInWord[playerguess[x[0]]] > 0:
-            wordguesses[x[0]][0] = f'{Fore.LIGHTYELLOW_EX}{playerguess[x[0]]}{Style.RESET_ALL}'
-            wordguesses[x[0]][1] = True
-            lettersInWord[playerguess[x[0]]] -= 1
-
-    for x in enumerate(guessWord):
-        good = wordguesses[x[0]][1]
-        if playerguess[x[0]] in guessWord and not good and lettersInWord[playerguess[x[0]]] > 0:
-            wordguesses[x[0]][0] = f'{Fore.LIGHTYELLOW_EX}{playerguess[x[0]]}{Style.RESET_ALL}'
-            wordguesses[x[0]][1] = True
-
-    for x in enumerate(guessWord):
-        good = wordguesses[x[0]][1]
-        if not good:
-            wordguesses[x[0]][0] = f'{Fore.LIGHTBLACK_EX}{playerguess[x[0]]}{Style.RESET_ALL}'
+    for x, letter in enumerate(guessWord):
+        good = wordguesses[x][1]
+        if playerguess[x] in guessWord and not good and lettersInWord[playerguess[x]] > 0:
+            wordguesses[x][0] = f'{Fore.LIGHTYELLOW_EX}{playerguess[x]}{Style.RESET_ALL}'
+            wordguesses[x][1] = True
+            lettersInWord[playerguess[x]] -= 1
+        elif not good:
+            wordguesses[x][0] = f'{Fore.LIGHTBLACK_EX}{playerguess[x]}{Style.RESET_ALL}'
 
     convertMe = []
     for x in enumerate(wordguesses):
@@ -121,6 +100,7 @@ def countBooleans(wordguesses):
     return counter
 
 if __name__ == "__main__":
+    colorama_init()
     individualWords = []
     guessedWords = []
 
