@@ -1,2 +1,2 @@
-"C:\Users\tapplegate\PycharmProjects\pythonProject\wordleFromHome\wordle.py"
-pause
+@echo off
+"./wordle.py"

@@ -1,3 +1,3 @@
-pip install colorama
-pip install random2
+py -m pip install colorama
+py -m pip install random2
 pause
